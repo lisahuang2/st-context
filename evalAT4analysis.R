@@ -1292,14 +1292,3 @@ summary(myData)   #Some descriptive statistics
 
 
 
-##---------R Resources------------------------##
-
-
-## Look at R materials from PSC204A and PSC205 SEM class
-
-## Other resources include the following:
-##  - Software Carpentry R workshop: http://data-lessons.github.io/gapminder-R/index.html
-##  - R for Data Science, online book from Ryan: http://r4ds.had.co.nz/
-##  - Documentation from the R website itself
-
-##-------------------------------

@@ -1,0 +1,326 @@
+---
+title: "ST&Cont3 Results"
+author: "Lisa M. Huang"
+date: "March 28, 2018"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r include = FALSE}
+#Load the following data tables from the full analyses into the global environment:
+load(file = "demogW.rda")
+```
+
+
+```{r include = FALSE}
+setwd("C:/Users/Lisa/Documents/Lisa/Experiments/Stereotyping in context/ST&Context3/r markdown")
+getwd()
+```
+
+
+## Contents
+
+1. Study Design
+
+2. Demographics
+    + Sample size
+    + Age
+    + Ethnicity
+    + Gender  
+
+3. Chi-square tests
+    + Congruent context
+    + Incongruent context
+    + Shared context
+    + Mixed context
+    + All context  
+
+4. Moderation by Stereotype
+    + Congruent context
+    + Incongruent context  
+
+5. Scale ratings
+    + Means
+    + Standard deviations
+    + Analysis 
+    + Bar graph
+
+
+
+## 1. Study Design
+
+### *Variables*
+
+* Stereotype (between-subjects)
+    + Extraverted
+    + Introverted
+    
+* Context (within-subjects)
+    + Congruent
+    + Incongruent
+    + Shared
+    + Mixed
+    + Novel
+    + All
+
+### *Sample size*
+
+```{r echo = FALSE}
+stpCount <- table(demogW$stereotype)
+stpProp <- prop.table(table(demogW$stereotype))
+cbind(stpCount,stpProp)
+```
+
+Stereotype    | Counts        | Percentages
+------------- | ------------- | -------------
+extraverted   | 140           | 54.9%
+introverted   | 115           | 45.1%
+
+
+
+## 2. Demographics
+
+### *Age*
+
+```{r echo = FALSE}
+cat("Mean: ", mean(demogW$dage) )
+cat("Standard Deviation: ", sd(demogW$dage) )
+```
+
+### *Ethnicity*
+
+```{r echo = FALSE}
+ethnicCount <- table(demogW$dethnic)
+ethnicProp <- prop.table(table(demogW$dethnic))
+cbind(ethnicCount,ethnicProp)
+```
+
+### *Gender*
+
+```{r echo = FALSE}
+genderCount <- table(demogW$dgender)
+genderProp <- prop.table(table(demogW$dgender))
+cbind(genderCount,genderProp)
+```
+
+
+
+## 3. Chi-square tests
+
+```{r include = FALSE}
+#Function for effect size
+cohenW = function(chisq, n) {
+  w = (sqrt(chisq/n))
+  return(w)
+}
+
+#Title of counts and proportions
+label <- 'Counts and proportions'
+```
+
+
+### *Congruent context*
+
+```{r echo = FALSE}
+load(file = "testCons.rda")
+
+label
+consCt <- table(testCons$response3)   
+consProp <- prop.table(table(testCons$response3))   
+rbind(consCt, consProp)
+
+cons <- c(465,45)              
+exp <- c(.5,.5)
+chisq.test(cons, p=exp)
+
+cat("Cohen's W: ", cohenW(345.88,510) )
+```
+
+### *Incongruent context*
+
+```{r echo = FALSE}
+load(file = "testIncs.rda")
+
+label
+incsCt <- table(testIncs$response3)
+incsProp <- prop.table(table(testIncs$response3)) 
+rbind(incsCt, incsProp)
+
+incs <- c(42,468)   
+exp <- c(.5,.5)
+chisq.test(incs, p=exp)
+
+cat("Cohen's W: ", cohenW(355.84,510) )
+
+```
+
+### *Shared context*
+
+```{r echo = FALSE}
+load(file = "testShared.rda")
+
+label
+shrdCt <- table(testShared$response3)
+shrdProp <- prop.table(table(testShared$response3)) 
+rbind(shrdCt, shrdProp)
+
+shrd <- c(566,454)   
+exp <- c(.5,.5)
+chisq.test(shrd, p=exp)
+
+cat("Cohen's W: ", cohenW(12.298,1020) )
+```
+
+### *Mixed context*
+
+```{r echo = FALSE}
+load(file = "testMixed.rda")
+
+label
+mixCt <- table(testMixed$response3)
+mixProp <- prop.table(table(testMixed$response3)) 
+rbind(mixCt, mixProp)
+
+mix <- c(502,518)   
+exp <- c(.5,.5)
+chisq.test(mix, p=exp)
+
+cat("Cohen's W: ", cohenW(.25098,1020) )
+```
+
+### *Novel context*
+
+```{r echo = FALSE}
+load(file = "testNovel.rda")
+
+label
+novCt <- table(testNovel$response3)
+novProp <- prop.table(table(testNovel$response3)) 
+rbind(novCt, novProp)
+
+nov <- c(650,370)   
+exp <- c(.5,.5)
+chisq.test(nov, p=exp)
+
+cat("Cohen's W: ", cohenW(76.863,1020) )
+```
+
+### *All context*
+
+```{r echo = FALSE}
+load(file = "testAll.rda")
+
+label
+allCt <- table(testAll$response3)
+allProp <- prop.table(table(testAll$response3)) 
+rbind(allCt, allProp)
+
+all <- c(490,530)   
+exp <- c(.5,.5)
+chisq.test(all, p=exp)
+
+cat("Cohen's W: ", cohenW(1.5686,1020) )
+```
+
+
+
+## 4. Moderation by Stereotype
+
+```{r include = FALSE}
+library(gmodels)
+```
+
+### *Congruent context*
+
+```{r echo = FALSE}
+CrossTable(testCons$stereotype, testCons$response3, fisher = T, chisq = T, expected = T, 
+           prop.c = F, prop.t = F, sresid = T, format = "SPSS")
+
+cat("Cohen's W: ", cohenW(0.7207373, 510) )
+```
+
+### *Incongruent context*
+
+```{r echo = FALSE}
+CrossTable(testIncs$stereotype, testIncs$response3, fisher = T, chisq = T, expected = T, 
+           prop.c = F, prop.t = F, sresid = T, format = "SPSS")
+
+cat("Cohen's W: ", cohenW(3.846858, 510) )
+```
+
+
+## 5. Scale Ratings
+
+```{r include = FALSE}
+library(dplyr)
+scaleMainW <- read.csv("scaleMainW.csv", header = TRUE)
+```
+
+### *Means, by stereotype and context*
+
+```{r echo = FALSE}
+aggregate(scaleMainW[c("Pcons","Pincs","shared","mixed","novel","overall")], 
+          scaleMainW["stereotype"], mean, na.rm=TRUE)
+```
+
+### *Standard Deviations, by stereotype and context*
+
+```{r echo = FALSE}
+aggregate(scaleMainW[c("Pcons","Pincs","shared","mixed","novel","overall")], 
+          scaleMainW["stereotype"], sd, na.rm=TRUE)
+```
+
+### *Analysis*
+
+```{r echo = FALSE}
+load(file = "scaleMain.rda")
+library(ez)   #For the ANOVA
+
+mixedAOV <- ezANOVA(data = scaleMain, 
+                    dv = .(response), 
+                    wid = .(subject), 
+                    within = .(trialType), 
+                    between = .(stereotype), 
+                    type = 3, 
+                    detailed = TRUE,
+                    return_aov = TRUE)
+
+mixedAOV
+
+print("Effect Sizes - partial eta squared")
+
+eta2p = function(eff, err) {
+  y = eff/(eff + err)
+  return(y)
+}
+
+#trialType (i.e., context)
+cat("Context: ", eta2p(112.1569, 3115.2833)) 
+
+#stereotype
+cat("Stereotype: ", eta2p(92.5419, 491.1444)) 
+
+#trialType x stereotype
+
+cat("Context x Stereotype: ", eta2p(2153.2265, 3115.2833) )
+```
+
+
+### *Bar Graph of scale ratings*
+
+```{r include = FALSE}
+library(ggplot2)
+```
+
+```{r echo = FALSE, fig.width = 7, fig.height = 5}
+ggplot(scaleMain, aes(trialType, response, fill = stereotype)) +
+  stat_summary(fun.y = mean, geom = 'bar', position = 'dodge') +
+  labs(x = 'Context', y = 'extraversion/introversion rating') +
+  scale_x_discrete(limits = c('Pcons','Pincs','novel','shared','mixed','overall')) 
+```
+
+

@@ -396,7 +396,7 @@ View(testAll)
 save(testAll, file="testAll.rda")
 
 
-#####--------TEST PHASE ANALYSES------------------------------------------------------------------------
+#####--------TEST PHASE ANALYSES OF MAIN TARGET (STEVE) -------------------------------------------
 
 ### Chi-square goodness-of-fit test ###
 
@@ -512,26 +512,24 @@ library(gmodels)
 # CrossTable(contingencyTable, fisher = T, chisq = T, expected = T, sresid = T, format = "SPSS")
 
 
-#Consistent trials, st moderation
-View(testCons)
+## CONGRUENT CONTEXT, MODERATION BY STEREOTYPE ##
+
+head(testCons)
 CrossTable(testCons$stereotype, testCons$response3, fisher = T, chisq = T, expected = T, 
            prop.c = F, prop.t = F, sresid = T, format = "SPSS")
 
 cohenW(0.7207373, 510)
 
-#***Note - if there is a a significant moderation, then run an analysis for each stereotype 
-#condition separately.
 
+## INCONGRUENT CONTEXT, MODERATION BY STEREOTYPE ##
 
-#Inconsistent trials, st moderation
-View(testIncs)
+head(testIncs)
 CrossTable(testIncs$stereotype, testIncs$response3, fisher = T, chisq = T, expected = T, 
            prop.c = F, prop.t = F, sresid = T, format = "SPSS")
 
 cohenW(3.846858, 510)
 
-
-#There is a moderation by stereotype, so break it down by stereotype condition
+#There is a significant moderation by stereotype, so break the data apart by stereotype condition
 
   #Extraverted condition
   tIncsExt <- subset(testIncs, stereotype == "extraverted")
@@ -545,9 +543,8 @@ cohenW(3.846858, 510)
   exp <- c(.5,.5)
   chisq.test(cnt, p=exp)
   
-  sum(cnt)    #To obtain n.
+  sum(cnt)    
   cohenW(216.13,280)       
-  
   
   #Introverted condition
   tIncsInt <- subset(testIncs, stereotype == "introverted")
@@ -565,15 +562,15 @@ cohenW(3.846858, 510)
   cohenW(140.87,230)      
 
 
+## SHARED CONTEXT, MODERATION BY STEREOTYPE ##
 
-#Shared trials, st moderation
-View(testShared)
+head(testShared)
 CrossTable(testShared$stereotype, testShared$response3, fisher = T, chisq = T, expected = T, 
            prop.c = F, prop.t = F, sresid = T, format = "SPSS")
 
 cohenW(42.11659, 1020)
 
-#There is a strong moderation by stereotype, so break it down by stereotype condition
+#There is a strong moderation by stereotype, so break the data apart by stereotype condition
   
   #Extraverted condition
   tSharedExt <- subset(testShared, stereotype == "extraverted")
@@ -587,9 +584,8 @@ cohenW(42.11659, 1020)
   exp <- c(.5,.5)
   chisq.test(cnt, p=exp)
   
-  sum(cnt)    #To obtain n.
+  sum(cnt)   
   cohenW(48.029,560)       
-  
   
   #Introverted condition
   tSharedInt <- subset(testShared, stereotype == "introverted")
@@ -607,67 +603,64 @@ cohenW(42.11659, 1020)
   cohenW(5.8783,460)      
 
 
-#Mixed trials, st moderation
+## MIXED CONTEXT, MODERATION BY STEREOTYPE ##
 
-View(testMixed)
+head(testMixed)
 CrossTable(testMixed$stereotype, testMixed$response3, fisher = T, chisq = T, expected = T, 
            prop.c = F, prop.t = F, sresid = T, format = "SPSS")
 
 cohenW(2.518273, 1020)
 
 
-#Novel trials, st moderation
+## NOVEL CONTEXT, MODERATION BY STEREOTYPE ##
 
-View(testNovel)
+head(testNovel)
 CrossTable(testNovel$stereotype, testNovel$response3, fisher = T, chisq = T, expected = T, 
            prop.c = F, prop.t = F, sresid = T, format = "SPSS")
 
 cohenW(0.1685929, n=1020)
 
 
-#All trials, st moderation
+## ALL CONTEXT, MODERATION BY STEREOTYPE ##
 
-View(testAll)
+head(testAll)
 CrossTable(testAll$stereotype, testAll$response3, fisher = T, chisq = T, expected = T, 
            prop.c = F, prop.t = F, sresid = T, format = "SPSS")
 
 cohenW(3.559828, 1020)
 
 
-
-##------------------------------------------------------------------------------------------
-
-
-### SCALE RATINGS ###
-
-library(dplyr)
+#####--------SCALE RATINGS OF MAIN TARGET STEVE----------------------------------------------
 
 View(scaleMain)
 
+## CLEAN THE SCALE RATINGS DATA ##
 
 # Add a variable to indicate the trial type
 
-# people - P1bob, P1john, P1chris
-# trialcode - 
-    # P1Bob condition
-          # scaleBob = Pcons
-          # scaleJohn = Pincs
-          # scaleChris = shared
-          # scaleBobJohn = mixed
-    # P1john condition
-          # scaleJohn = Pcons
-          # scaleChris = Pincs
-          # scaleBob = shared
-          # scaleJohnChris = mixed
-    # P1chris condition
-          # scaleChris = Pcons
-          # scaleBob = Pincs
-          # scaleJohn = shared
-          # scaleChrisBob = mixed
-    # all conditions
-          # scaleNovel
-          # scaleOverall
-          # scaleInstr
+    # people - P1bob, P1john, P1chris
+    # trialcode - 
+        # P1Bob condition
+              # scaleBob = Pcons
+              # scaleJohn = Pincs
+              # scaleChris = shared
+              # scaleBobJohn = mixed
+        # P1john condition
+              # scaleJohn = Pcons
+              # scaleChris = Pincs
+              # scaleBob = shared
+              # scaleJohnChris = mixed
+        # P1chris condition
+              # scaleChris = Pcons
+              # scaleBob = Pincs
+              # scaleJohn = shared
+              # scaleChrisBob = mixed
+        # all conditions
+              # scaleNovel
+              # scaleOverall
+              # scaleInstr
+
+library(dplyr)
 
 scaleMain$trialType <- ifelse(scaleMain$people == "P1bob" & scaleMain$trialcode == "scaleBob", "Pcons",
                         ifelse(scaleMain$people == "P1bob" & scaleMain$trialcode == "scaleJohn", "Pincs",
@@ -689,69 +682,48 @@ scaleMain$trialType <- ifelse(scaleMain$people == "P1bob" & scaleMain$trialcode 
                         ifelse(scaleMain$trialcode == "scaleOverall", "overall",            
                                "scaleInstr"))))))))))))
 
-
 #Remove all scaleInstr rows.
 scaleMain <- subset(scaleMain,  trialType != "scaleInstr")
-
 
 #Check that each variable is the correct data type.
 sapply(scaleMain, class)
 
-
-#Change condition from numeric to factor, and change stereotype, people, button, and trialType from character to factor
+#Change the variables to the correct class.
 scaleMain$condition <- factor(scaleMain$condition)
 scaleMain$stereotype <- factor(scaleMain$stereotype)
 scaleMain$people <- factor(scaleMain$people)
 scaleMain$button <- factor(scaleMain$button)
 scaleMain$trialType <- factor(scaleMain$trialType)
-
-#Change response from factor to numeric
-
 scaleMain$response <- as.numeric(as.character(scaleMain$response))
 
-
-#Convert to wide format and export to a csv file
-
+#Convert the scale ratings data to wide format
 library(reshape2)
-
 scaleMainW <- dcast(scaleMain, date + time + group + subject + condition + stereotype + people + button
                      ~ trialType, value.var = "response")
-
 View(scaleMainW)
-save(scaleMainW, file="scaleMainW.rda")
 
+#Save and export the wide format data to a csv file
+save(scaleMainW, file="scaleMainW.rda")
 write.csv(scaleMainW, "scaleMainW.csv")
 
 
-#One way of getting descriptive statistics (mean, sd) is to use the aggregate fuction
-#on the wide format data.
+## DESCRIPTIVE STATISTICS OF SCALE RATINGS DATA ##
 
+#Aggregate function on the wide format data for mean and SD
 aggregate(scaleMainW[c("Pcons","Pincs","shared","mixed","novel","overall")], 
           scaleMainW["stereotype"], mean, na.rm=TRUE)
-
 aggregate(scaleMainW[c("Pcons","Pincs","shared","mixed","novel","overall")], 
           scaleMainW["stereotype"], sd, na.rm=TRUE)
 
-
-#A better way of getting descriptives is using the stat.desc function in the pastecs package
-#because you get all the stats you need (mean, sd, se, etc.) at one time.
-#The following code allows you to calculate the statistics by two or more grouping variables
-#in the long format data. In the wide format data, you would have to write a line of code for
-#each level of context. It would look like this: 
-#     by(pilotScale$Pcons, pilotScale$stereotype, stat.desc)
-#Then you would have to do this for each of the five levels of context. The code for the long 
-#format data is more efficient.
-
+#For more comprehensive statistics, use stat.desc from the pastecs package with the long format data
 library(pastecs)
-
 by(scaleMain$response, list(scaleMain$trialType,scaleMain$stereotype), stat.desc)
 
 
-#ANOVA (in the long format data)
+## ANALYSIS OF VARIANCE (in the long format data) ##
 
-library(ez)   #For the ANOVA
-# library(lsr)  for the effect sizes
-
+head(scaleMain)
+library(ez)
 
 mixedAOV <- ezANOVA(data = scaleMain, 
                     dv = .(response), 
@@ -761,59 +733,41 @@ mixedAOV <- ezANOVA(data = scaleMain,
                     type = 3, 
                     detailed = TRUE,
                     return_aov = TRUE)
-                    
-
-#Calculate partial eta squared effect sizes
+             
+#Write a function to calculate partial eta-squared effect sizes
 #Partial eta squared = SS effect/(SS effect + SS error)
 #eff = SS of effect
 #err = SS of error
 #function -> eta2p(eff,err)
-
-View(scaleMain)
 
 eta2p = function(eff, err) {
   y = eff/(eff + err)
   return(y)
 }
 
-#trialType (i.e., context)
+#effect size of trialType (i.e., context)
 eta2p(112.1569, 3115.2833) 
 
-#stereotype
+#effect size of stereotype
 eta2p(92.5419, 491.1444) 
 
-#trialType x stereotype
+#effect size of trialType x stereotype
 eta2p(2153.2265, 3115.2833) 
 
 
-
-### To do a simple effects analysis, you would have to run the 
-# anova using the lm function. Then you can use the package
-# lsmeans or phia to calculate the simple effects.
-
-
-#install.packages("phia")
-#library(phia)
-
-#testInteractions(mixedAOV, fixed="trialType", across="stereotype")
+# *Note - To conduct a simple effects analysis, you have to run the anova using the lm function. 
+# Then you can use the package lsmeans or phia to calculate the simple effects.
+# It doesn't seem possible to do this with a mixed effects model (i.e., between var x within var interaction). 
 
 
-### Create plot of scale ratings
+## PLOT THE SCALE RATINGS ##
 
 library(ggplot2)
-View(scaleMain)
 
-#context variable is called 'trialType'
+#context variable is 'trialType'
 #stereotype variable is 'stereotype'
 #extraversion/introversion rating is 'response'
 
-
-#Format of the plot:
-#   ggplot(dataframe, aes(x_variable, y_variable, fill = other_x_variable)) +
-#      stat_summary(fun.y = mean, geom = 'bar', position = 'dodge') +
-#      labs(x = 'x-axis label', y = 'y-axis label')
-
-#Bar graph of the scale ratings
 ggplot(scaleMain, aes(trialType, response, fill = stereotype)) +
   stat_summary(fun.y = mean, geom = 'bar', position = 'dodge') +
   labs(x = 'Context', y = 'extraversion/introversion rating') +

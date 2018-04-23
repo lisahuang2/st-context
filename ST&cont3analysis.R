@@ -2,11 +2,6 @@
 #### ST&CONT3 DATA ANALYSIS ####
 #------------------------------#
 
-
-#Set the directory to the location of the datafile
-setwd("C:/Users/Lisa/Dropbox/Lisa/ST&Cont3/full analysis in R")
-getwd()
-
 #Packages used
 library(reshape2)
 library(dplyr)
@@ -16,46 +11,35 @@ library(gmodels)
 library(ggplot2)
 
 
-#Read in the csv data file.
+#Read in the csv data file and save as an R file
 rawdata = read.csv("rawData.csv", header = TRUE)
-
-#Save the raw data as an R data file
 save(rawdata, file="rawdata.rda")
 
-#open up the data in a new tab
+#View the data
 View(rawdata)
 
-#Save another copy of the data that will be used for analysis
+#Save a second copy of the data that will be used for analyses
 alldata <- rawdata
 save(alldata, file="alldata.rda")
 View(alldata)
 
 
+##### -------------DATA CLEANING ------------------------------------------------------------
 
-##------------------------------------------------------------------------------------------
-
-
-### REMOVE UNNECESSARY DATA ###
-
-#Remove unnecessary columns.
+### REMOVE UNNECESSARY DATA COLUMNS ###
 
 alldata <- rawdata[,c("date", "time", "group", "subject", "blocknum", "trialnum", 
-                      "blockcode", "trialcode", "response", "correct", "latency")] 
-                             
-View(alldata)
+                      "blockcode", "trialcode", "response", "correct", "latency")]  
+head(alldata)
 
 
-### Remove subjects
-#See the ST&Cont3 DATA ANALYSIS word document and subj notes excel file for full list
+### REMOVE EXCLUDED SUBJECTS ###
+# (See the ST&Cont3 DATA ANALYSIS word document and subj notes excel file for full list of exclusions)
 
-
-#Remove subject numbers from my test runs (1, 4, 327)
-
+#Subject numbers from test runs (1, 4, 327)
 alldata <- alldata[which(alldata$subject!=1 & alldata$subject!=4 & alldata$subject!=327), ]
 
-
-#Remove subjects who quit right after the demographics questions (not included in N)
-
+#Subjects who quit right after the demographics questions (not included in total N)
 alldata <- alldata[which(alldata$subject!=30 & alldata$subject!=75 & alldata$subject!=122 & alldata$subject!=130 & 
                            alldata$subject!=166 & alldata$subject!=265 & alldata$subject!=279 & alldata$subject!=332 & 
                            alldata$subject!=373 & alldata$subject!=425 & alldata$subject!=434 & alldata$subject!=437 & 
@@ -63,15 +47,11 @@ alldata <- alldata[which(alldata$subject!=30 & alldata$subject!=75 & alldata$sub
                            alldata$subject!=626 & alldata$subject!=651 & alldata$subject!=663 & alldata$subject!=667 &
                            alldata$subject!=742 & alldata$subject!=781 & alldata$subject!=915 & alldata$subject!=988),]
 
-
-#Remove subjects for failing the stereotype attention check
-
+#Subjects who failed the stereotype attention check
 alldata <- alldata[which(alldata$subject!=27 & alldata$subject!=363 & alldata$subject!=420 & alldata$subject!=593 & 
                            alldata$subject!=618 & alldata$subject!=704 & alldata$subject!=997 & alldata$subject!=1210),]
 
-
-#Remove subjects for poor learning
-
+#Subjects who failed the learning criteria in learning phase
 alldata <- alldata[which(alldata$subject!=16 & alldata$subject!=18 & alldata$subject!=21 & alldata$subject!=51 & alldata$subject!=53 &
                        alldata$subject!=93 & alldata$subject!=101 & alldata$subject!=108 & alldata$subject!=112 & alldata$subject!=121 &
                        alldata$subject!=124 & alldata$subject!=226 & alldata$subject!=238 & alldata$subject!=247 & alldata$subject!=254 &
@@ -81,50 +61,37 @@ alldata <- alldata[which(alldata$subject!=16 & alldata$subject!=18 & alldata$sub
                        alldata$subject!=945 & alldata$subject!=950 & alldata$subject!=1090 & alldata$subject!=1093 & alldata$subject!=1145 & 
                        alldata$subject!=1160 & alldata$subject!=1173 & alldata$subject!=1192 & alldata$subject!=1243 &  alldata$subject!=1265),]
 
-
-#Remove subjects for failing stereotype attention check AND poor learning
-
+#Subjects who failed stereotype attention check AND learning criteria in learning phase
 alldata <- alldata[which(alldata$subject!=32 & alldata$subject!=117 & alldata$subject!=129 & alldata$subject!=323 & alldata$subject!=350 &
                        alldata$subject!=379 & alldata$subject!=387 & alldata$subject!=479 & alldata$subject!=535 & alldata$subject!=589 &
                        alldata$subject!=596 & alldata$subject!=693 & alldata$subject!=715 & alldata$subject!=734 & alldata$subject!=796 &
                        alldata$subject!=892 & alldata$subject!=1006 & alldata$subject!=1100 & alldata$subject!=1129 & alldata$subject!=1170 &
                        alldata$subject!=1180 & alldata$subject!=1185),]
 
-
-#Remove subjects for no test phase data or pressing same button throughout test phase
-
+#Subjects with no test phase data and subjects who pressed the same button throughout the test phase
 alldata <- alldata[which(alldata$subject!=534 & alldata$subject!=622 & alldata$subject!=785),]
 
-
-#Remove duplicate subjects
-
+#Duplicate subjects
 alldata <- alldata[!(alldata$subject==383 & alldata$time=="11:00:34"),]
 alldata <- alldata[!(alldata$subject==860 & alldata$time=="20:59:32"),]
 
+#Save file
 save(alldata, file="alldata.rda")
 
-
-# Check that all bad participants have been removed.
+# Check that all excluded participants have been removed.
 # There should be a total of 255 participants up to this point.
-
 length(unique(alldata$subject))
-
 
 
 ### ADD CONDITION COLUMNS ###
 
-
 #Create condition variable. The condition is the remainder of the subject number divided by
 #the number of conditions, in this case, 12. Then recode condition 0 as condition 12.
-
 alldata$condition <- alldata$subject %% 12
-
 alldata$condition <- ifelse(alldata$condition == 0, 
                         c(12), c(alldata$condition)) 
 
-
 #Add stereotype condition column
-
 alldata$stereotype <- ifelse(alldata$condition == 1 |
                                   alldata$condition == 3 |
                                   alldata$condition == 5 |
@@ -133,9 +100,7 @@ alldata$stereotype <- ifelse(alldata$condition == 1 |
                                   alldata$condition == 11, 
                                   c("extraverted"), c("introverted"))
 
-
 #Add people counterbalancing condition
-
 alldata$people <- ifelse(alldata$condition == 1 |
                               alldata$condition == 2 |
                               alldata$condition == 3 |
@@ -148,10 +113,7 @@ alldata$people <- ifelse(alldata$condition == 1 |
                                          "P1john",
                                               "P1chris"))
 
-
-
 #Add button order counterbalancing condition
-
 alldata$button <- ifelse(alldata$condition == 1 |
                               alldata$condition == 2 |
                               alldata$condition == 5 |
@@ -160,98 +122,71 @@ alldata$button <- ifelse(alldata$condition == 1 |
                               alldata$condition == 10, 
                                   c("extraF"), c("introF"))
 
-
-
 #Move the stereotype, people, and button columns right after the condition column.
-
 alldata <- alldata[ , c("date", "time", "group", "subject", "condition", "stereotype", 
                                "people", "button", "blocknum", "trialnum", "blockcode", "trialcode", 
                                "response", "correct", "latency")]
 
-
 #select the subject, blockcode, condition, stereotype, people, and button columns to check that the 
 #correct conditions have been assigned to each subject.
-
 viewCond = alldata[ , c("subject", "blockcode", "condition", "stereotype", "people", "button")]
 View(viewCond)
 save(viewCond, file="viewCond.rda")
 
 
-
-##------------------------------------------------------------------------------------------
-
+#####-----SEPARATE INTO DIFFERENT FILES------------------------------------------------------------
 
 ### SEPARATE EACH PART OF THE EXPERIMENT INTO SEPARATE DATA FILES FOR ANALYSIS ###
 
 #Demographic data
-
 demog <- subset(alldata, blocknum == 1)
 View(demog)
 save(demog, file="demog.rda")
 
-#Separate stereotype manipulation block
-
+#Stereotype manipulation block
 stpCheck <- subset(alldata, blocknum == 2)
 View(stpCheck)
 save(stpCheck, file="stpCheck.rda")
 
-#Separate learning phase
-
+#Learning phase
 learn <- subset(alldata, blocknum %in% c(4:13))
 View(learn)
 save(learn, file="learn.rda")
 
-
-#Separate test phase
-
+#Test phase
 testMain <- subset(alldata, blocknum == 15)
 View(testMain)
 save(testMain, file="testMain.rda")
 
-
-#Separate scale ratings
-
+#Scale ratings
 scaleMain <- subset(alldata, blocknum == 16)
 View(scaleMain)
 save(scaleMain, file="scaleMain.rda")
 
-
-#Separate test phase and scale ratings of other targets
-
+#Test phase and scale ratings of ingroup and outgroup targets
 other <- subset(alldata, blocknum == 17)
 View(other)
 save(other, file="other.rda")
 
 
-
-##------------------------------------------------------------------------------------------
-
-
-### DEMOGRAPHICS ###
+#####-------DEMOGRAPHIC DATA-----------------------------------------------------------------------------------
 
 View(demog)
 
 #Create a wide format demographics file
-
 library(reshape2)
-
 demogW <- dcast(demog, date + time + group + subject + condition + stereotype + people + button
                           ~ trialcode, value.var = "response")
-
 demogW$instrDemo <- NULL
 demogW$intro1 <- NULL
-
 View(demogW)
 save(demogW, file="demogW.rda")
 
-
-
-
-#Check that all the variables are in the correct data class
-
+#Check that all the variables are in the correct data classs
 library(dplyr)
 sapply(demogW, class)
 
+#Change variables to the correct data classs
 demogW$condition <- as.factor(as.character(demogW$condition))
 demogW$stereotype <- as.factor(demogW$stereotype)
 demogW$people <- as.factor(demogW$people)
@@ -259,101 +194,89 @@ demogW$button <- as.factor(demogW$button)
 demogW$dage <- as.numeric(demogW$dage)
 
 
-#Summary descriptives
+### SAMPLE SIZES BY CONDITION (Frequencies & Proportions) ###
 
-#Mean and SD of age
-
-mean(demogW$dage)
-sd(demogW$dage)
-
-#Or use pastecs package for more descriptive stats
-
-library(pastecs)
-stat.desc(demogW$dage)
-
-
-##frequencies & proportions
-
-#condition
+#Separated by all 12 experimental conditions
 condCount <- table(demogW$condition)
 condProp <- prop.table(table(demogW$condition))
 cbind(condCount, condProp)
 
-#stereotype
+#Separated by stereotype condition
 stpCount <- table(demogW$stereotype)
 stpProp <- prop.table(table(demogW$stereotype))
 cbind(stpCount,stpProp)
 
-#people
+#Separated by people counterbalancing condition
 peopleCount <- table(demogW$people)
 peopleProp <- prop.table(table(demogW$people))
 cbind(peopleCount,peopleProp)
 
-#button
+#Separated by button counterbalancing condition
 buttonCount <- table(demogW$button)
 buttonProp <- prop.table(table(demogW$button))
 cbind(buttonCount,buttonProp)
 
-#denglang
-engCount <- table(demogW$denglang)
-engProp <- prop.table(table(demogW$denglang))
-cbind(engCount,engProp)
 
-#dethnic
+### SUMMARY DESCRIPTIVES ###
+
+#Mean and SD of age
+mean(demogW$dage)
+sd(demogW$dage)
+
+#use pastecs package for more descriptive stats
+library(pastecs)
+stat.desc(demogW$dage)
+
+#Counts and proportions of ethnicity (dethnic)
 ethnicCount <- table(demogW$dethnic)
 ethnicProp <- prop.table(table(demogW$dethnic))
 cbind(ethnicCount,ethnicProp)
 
-#dgender
+#Counts and proportions of gender (dgender)
 genderCount <- table(demogW$dgender)
 genderProp <- prop.table(table(demogW$dgender))
 cbind(genderCount,genderProp)
 
-#dUS
+#Frequencies and proportions of English as first language (denglang, yes or no)
+engCount <- table(demogW$denglang)
+engProp <- prop.table(table(demogW$denglang))
+cbind(engCount,engProp)
+
+#Frequencies and proportions of born in US (dUS, yes or no)
 usCount <- table(demogW$dUS)
 usProp <- prop.table(table(demogW$dUS))
 cbind(usCount,usProp)
 
-
-#Save file
+#Save the file
 save(demogW, file="demogW.rda")
 
 
-
-##------------------------------------------------------------------------------------------
-
-
-### TEST PHASE ###
+#####--------TEST PHASE DATA CLEANING------------------------------------------------------------------------
 
 View(testMain)
 
 #Remove all columns except for subject, trialcode, and response. Save as a new data frame.
-
 testMain <- testMain[,c("subject", "condition", "stereotype", "people", "button", "trialcode", "response")]
 View(testMain)
 
-
 #Remove instruction trial rows
-
 testMain <- subset(testMain, trialcode != "testInstr")
 
-
-#Add a column to indicate the trial type
-
+#Add a variable to indicate the trial type
 testMain$trialType <- ifelse(testMain$trialcode == "P1c1v2" | 
-                                  testMain$trialcode == "P1c3v4" |
-                                  testMain$trialcode == "P1c5v6" | 
-                                  testMain$trialcode == "P1c7v8" | 
-                                  testMain$trialcode == "P1c9v10" | 
-                                  testMain$trialcode == "P1c11v12", "P1",
-                               
+                                   testMain$trialcode == "P1c3v4" |
+                                   testMain$trialcode == "P1c5v6" | 
+                                   testMain$trialcode == "P1c7v8" | 
+                                   testMain$trialcode == "P1c9v10" | 
+                                   testMain$trialcode == "P1c11v12", "P1",
+                             
                                ifelse(testMain$trialcode == "P2c1v2" | 
                                         testMain$trialcode == "P2c3v4" |
                                         testMain$trialcode == "P2c5v6" | 
                                         testMain$trialcode == "P2c7v8" | 
                                         testMain$trialcode == "P2c9v10" | 
                                         testMain$trialcode == "P2c11v12", "P2",
-                               
+                             
                                ifelse(testMain$trialcode == "sharedc1v2" | 
                                         testMain$trialcode == "sharedc3v4" |
                                         testMain$trialcode == "sharedc5v6" | 
@@ -372,8 +295,8 @@ testMain$trialType <- ifelse(testMain$trialcode == "P1c1v2" |
                                         testMain$trialcode == "mix2c5v6" | 
                                         testMain$trialcode == "mix2c7v8" | 
                                         testMain$trialcode == "mix2c9v10" | 
-                                        testMain$trialcode == "mix2c11v12", "mixed",
-                                        
+                                        testMain$trialcode == "mix2c11v12", "mixed",      
+                                      
                                 ifelse(testMain$trialcode == "all1c1v2" | 
                                         testMain$trialcode == "all1c3v4" |
                                         testMain$trialcode == "all1c5v6" | 
@@ -388,19 +311,16 @@ testMain$trialType <- ifelse(testMain$trialcode == "P1c1v2" |
                                         testMain$trialcode == "all2c11v12", "all",
                                     "novel")))))  
 
-#Add a column to indicate the button response letter
-
+#Add a variable to indicate the button response letter
 testMain$response2 <- ifelse(testMain$response == 33, "F",
                              ifelse(testMain$response == 36, "J",
                                     "null"))
 
-#***Find any null responses
+#Find any null responses
 library(plyr)
 count(testMain, 'response2')
 
-
-#Add a column to indicate whether the response was the consistent trait or the inconsistent trait
-
+#Add a variable to indicate whether the response was the consistent trait or the inconsistent trait
 testMain$response3 <- ifelse(testMain$stereotype == "extraverted" & 
                                  testMain$button == "extraF" & 
                                  testMain$response2 == "F", "cons", 
@@ -435,16 +355,14 @@ testMain$response3 <- ifelse(testMain$stereotype == "extraverted" &
                                     
                                "null"))))))))
 
-                              
-save(testMain, file="testMain.rda")
-
-#***Find any null responses
+#Find any null responses
 library(plyr)
 count(testMain, 'response3')
 
+#Save the file
+save(testMain, file="testMain.rda")
 
 #Separate the data by trial type
-
 testCons <- subset(testMain, trialType == "P1")
 View(testCons)
 save(testCons, file="testCons.rda")
@@ -469,6 +387,8 @@ testAll <- subset(testMain, trialType == "all")
 View(testAll)
 save(testAll, file="testAll.rda")
 
+
+#####--------TEST PHASE ANALYSES------------------------------------------------------------------------
 
 ### Chi-square goodness-of-fit test ###
 

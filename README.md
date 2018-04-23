@@ -10,10 +10,13 @@ People’s attempts to maintain consistency in their impressions of others often
 FILES
 
 Experiment 3:
-- ST&cont3_analysis.R (data analysis script)
+- ST&cont3_analysis.R 
+    - Data analysis script
     - Cleaned and condensed on 4/23/18 for readability
-- ST&cont3_markdown.rmd (R markdown document for reporting results)
-- ST&cont3_report.html (html report generated from ST&cont3_markdown.rmd)
+- ST&cont3_markdown.rmd 
+    - R markdown document for reporting results
+- ST&cont3_report.html 
+    - html report generated from ST&cont3_markdown.rmd
 
 Experiment 4a:
 - evalAT4_analysis.R (Experiment 4a in dissertation)

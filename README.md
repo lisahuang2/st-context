@@ -15,6 +15,7 @@ Experiment 3:
     - Cleaned and condensed on 4/23/18 for readability
 - ST&cont3_markdown.rmd 
     - R markdown document for reporting results
+    - Provides the template for report but does not contain all results
 - ST&cont3_report.html 
     - html report generated from ST&cont3_markdown.rmd
 

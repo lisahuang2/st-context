@@ -774,25 +774,20 @@ ggplot(scaleMain, aes(trialType, response, fill = stereotype)) +
 
 
 
-
-##------------------------------------------------------------------------------------------
-
-
-### OTHER TARGET TEST PHASE AND SCALE RATINGS ###
+#####----------ANALYSIS OF THE INGROUP AND OUTGROUP TARGETS---------------------------------------------
 
 View(other)
 
+## CLEAN AND SEPARATE THE FILES ##
 
 #Remove all columns except for subject, condition, stereotype, people, button, trialcode, and response. 
-#Save as a new data frame.
-
 other2 <- other[,c("subject", "condition", "stereotype", "people", "button", "trialcode", "response")]
 View(other2)
+
+#Save as a new data frame.
 save(other2, file="pilotOther2.rda")
 
-
-#Remove bad participants
-
+#Remove excluded participants (see separate document on subject exclusions)
 other2 <- other2[which(other2$subject!=58 & other2$subject!=73 & other2$subject!=136 & other2$subject!=144 & 
                            other2$subject!=174 & other2$subject!=185 & other2$subject!=195 & other2$subject!=200 & 
                            other2$subject!=215 & other2$subject!=243 & other2$subject!=259 & other2$subject!=338 & 
@@ -811,36 +806,31 @@ other2 <- other2[which(other2$subject!=58 & other2$subject!=73 & other2$subject!
 
 # Check that all bad participants have been removed.
 # There should be a total of 195 participants up to this point.
-
 length(unique(other2$subject))
 
-
 #Remove instruction trial rows
-
 other2 <- subset(other2, trialcode != "testOthExtr" & trialcode != "testOthIntr")
                    
-
-#Separate the scale ratings into a separate file and remove from the pilotOther2 dataframe
-
+#Separate the scale ratings into a separate file and save.
 otherScale <- subset(other2, trialcode == "scaleSamOv" | trialcode == "scaleWaltOv")
 View(otherScale)
 save(otherScale, file="otherScale.rda")
 
+#Remove the scale ratings data from the other2 data frame
 other2 <- subset(other2, trialcode != "scaleSamOv" & trialcode != "scaleWaltOv")
 
-
-#Separate the attention check into a separate file and remove from the pilotOther2 dataframe
-
+#Separate the attention check into a separate file and save.
 otherCheck <- subset(other2, trialcode == "attnCheckSam" | trialcode == "attnCheckWalt")
 View(otherCheck)
 save(otherCheck, file="otherCheck.rda")
 
+#Remove the attention check data from the other2 data frame
 other2 <- subset(other2, trialcode != "attnCheckSam" & trialcode != "attnCheckWalt")
 
 
+#####--------OTHER TARGET TEST PHASE DATA CLEANING-----------------------------------------
 
-#Add a column to indicate the trial type
-
+#In the other2 data frame, add a variable to indicate the trial type.
 other2$trialType <- ifelse(other2$trialcode == "P1sam1v2" | 
                                  other2$trialcode == "P1sam3v4" |
                                  other2$trialcode == "P1sam5v6" | 
@@ -927,16 +917,12 @@ other2$trialType <- ifelse(other2$trialcode == "P1sam1v2" |
                                 other2$trialcode == "nov3inFwalt" |
                                 other2$trialcode == "nov4inFwalt", "novelwalt",
                                                            "null"))))))))))
-                              
-
-#***Find any null responses
+                             
+#Check that there are no null responses
 library(plyr)
 count(other2, 'trialType')
 
-
-
-#Add a column to indicate whether the trial is a same-group target or a different-group target
-
+#Add a variable to indicate the target (ingroup, outgroup) of each trial.
 other2$target <- ifelse(other2$stereotype == "extraverted" & 
                                    (other2$trialType == "P1sam" | 
                                       other2$trialType == "P2sam" |
@@ -966,21 +952,14 @@ other2$target <- ifelse(other2$stereotype == "extraverted" &
                                          other2$trialType == "mixedsam"), "outgroup",
                                                "null"))))
 
-#Check for null responses
-library(plyr)
+#Check that there are no null responses
 count(other2, 'target')
-                                
-                              
-
+                             
 #Add a column to indicate the button response letter
-
 other2$response2 <- ifelse(other2$response == 33, "F", "J")
 
-
-#Add a column to indicate whether the response was the consistent trait or the inconsistent trait
-# Note - you can shorten the code by calling the condition number rather than stereotype and button.
-
-
+#Add a column to indicate whether the response was the congruent trait or the incongruent trait
+#(Note - the code can be shortened by calling the condition number rather than the stereotype and button response.)
 other2$response3 <- ifelse(other2$stereotype == "extraverted" & 
                                   other2$button == "extraF" & 
                                   other2$response2 == "F", "cons", 
@@ -1015,96 +994,84 @@ other2$response3 <- ifelse(other2$stereotype == "extraverted" &
                                                                                  
                                "null"))))))))
 
-
-#***Find any null responses
-library(plyr)
+#Check that there are no null responses
 count(other2, 'response3')
 
+#Save the file
 save(other2, file="other2.rda")
 
 
-#Separate the data by trial type
+## SEPARATE THE OTHER-TARGET TEST PHASE DATA BY TRIAL TYPE ## 
 
-#---ingroup, P1
+#---ingroup target, P1 context
 othIng_P1 <- subset(other2, (  (trialType == "P1sam" & target == "ingroup") |
                                     (trialType == "P1walt" & target == "ingroup")   )
                     )
-View(othIng_P1)
+head(othIng_P1)
 save(othIng_P1, file = "othIng_P1.rda")         
 
-
-#---ingroup, P2
+#---ingroup target, P2 context
 othIng_P2 <- subset(other2, (  (trialType == "P2walt" & target == "ingroup") |
                                       (trialType == "P2sam" & target == "ingroup")   )
                     )
-View(othIng_P2)
+head(othIng_P2)
 save(othIng_P2, file = "othIng_P2.rda")     
 
-
-#---ingroup, shared
+#---ingroup target, shared context
 othIng_shared <- subset(other2, (  (trialType == "sharedsam" & target == "ingroup") |
                                       (trialType == "sharedwalt" & target == "ingroup")   )
                         )
-View(othIng_shared)
+head(othIng_shared)
 save(othIng_shared, file = "othIng_shared.rda")  
 
-
-#---ingroup, mixed
+#---ingroup target, mixed context
 othIng_mixed <- subset(other2, (  (trialType == "mixedsam" & target == "ingroup") |
                                           (trialType == "mixedwalt" & target == "ingroup")   )
                        )
-View(othIng_mixed)
+head(othIng_mixed)
 save(othIng_mixed, file = "othIng_mixed.rda")  
 
-
-#---ingroup, novel
+#---ingroup target, novel context
 othIng_novel <- subset(other2, (  (trialType == "novelsam" & target == "ingroup") |
                                          (trialType == "novelwalt" & target == "ingroup")   )
 )
-View(othIng_novel)
+head(othIng_novel)
 save(othIng_novel, file = "othIng_novel.rda")  
 
-
-
-#---outgroup, P1
+#---outgroup target, P1 context
 othOut_P1 <- subset(other2, (  (trialType == "P1sam" & target == "outgroup") |
                                       (trialType == "P1walt" & target == "outgroup")   )
 )
-View(othOut_P1)
+head(othOut_P1)
 save(othOut_P1, file = "othOut_P1.rda")         
 
-
-#---outgroup, P2
+#---outgroup target, P2 context
 othOut_P2 <- subset(other2, (  (trialType == "P2walt" & target == "outgroup") |
                                       (trialType == "P2sam" & target == "outgroup")   )
 )
-View(othOut_P2)
+head(othOut_P2)
 save(othOut_P2, file = "othOut_P2.rda")     
 
-
-#---outgroup, shared
+#---outgroup target, shared context
 othOut_shared <- subset(other2, (  (trialType == "sharedsam" & target == "outgroup") |
                                           (trialType == "sharedwalt" & target == "outgroup")   )
 )
-View(othOut_shared)
+head(othOut_shared)
 save(othOut_shared, file = "othOut_shared.rda")  
 
-
-#---outgroup, mixed
+#---outgroup target, mixed context
 othOut_mixed <- subset(other2, (  (trialType == "mixedsam" & target == "outgroup") |
                                          (trialType == "mixedwalt" & target == "outgroup")   )
 )
-View(othOut_mixed)
+head(othOut_mixed)
 save(othOut_mixed, file = "othOut_mixed.rda")  
 
-
-#---outgroup, novel
+#---outgroup target, novel context
 othOut_novel <- subset(other2, (  (trialType == "novelsam" & target == "outgroup") |
                                          (trialType == "novelwalt" & target == "outgroup")   )
 )
-View(othOut_novel)
+head(othOut_novel)
 save(othOut_novel, file = "othOut_novel.rda")  
-
 
 
 ### OTHER TARGET, INGROUP ANALYSIS ##

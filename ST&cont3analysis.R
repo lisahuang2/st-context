@@ -9,7 +9,8 @@ library(pastecs)
 library(plyr)
 library(gmodels)
 library(ggplot2)
-
+library(psych)
+library(lsr)
 
 #Read in the csv data file and save as an R file
 rawdata = read.csv("rawData.csv", header = TRUE)
@@ -1312,11 +1313,11 @@ cohenW(0.8661411, 780)
 
 
 
-
-## SCALE RATINGS OF OTHER TARGETS ##
-
+#####--------SCALE RATINGS OF INGROUP AND OUTGROUP TARGETS----------------------------------
 
 View(otherScale)
+
+## CLEAN THE SCALE RATINGS DATA ##
 
 #Add a column to indicate whether the target is the ingroup or the outgroup
 otherScale$target <- ifelse(otherScale$stereotype == "extraverted" & otherScale$trialcode == "scaleSamOv", "ingroup",
@@ -1324,40 +1325,34 @@ otherScale$target <- ifelse(otherScale$stereotype == "extraverted" & otherScale$
                             ifelse(otherScale$stereotype == "introverted" & otherScale$trialcode == "scaleWaltOv", "ingroup",
                             ifelse(otherScale$stereotype == "introverted" & otherScale$trialcode == "scaleSamOv", "outgroup",
                                   "null"))))
-#Check for null responses
+
+#Check that there are no null responses
 library(plyr)
 count(otherScale$target)
-
 
 #Check that each variable is the correct data type.
 sapply(otherScale, class)
 
-#Change condition, stereotype, people, button, and target to factor
+#Change the variables to the correct data class
 otherScale$condition <- factor(otherScale$condition)
 otherScale$stereotype <- factor(otherScale$stereotype)
 otherScale$people <- factor(otherScale$people)
 otherScale$button <- factor(otherScale$button)
 otherScale$target <- factor(otherScale$target)
-
-#Change response from factor to numeric
 otherScale$response <- as.numeric(as.character(otherScale$response))
 
-
-#Convert to wide format and export to a csv file
-
+#Convert to wide format
 library(reshape2)
-
 otherScaleW <- dcast(otherScale, subject + condition + stereotype + people + button
                      ~ trialcode, value.var = "response")
-
 View(otherScaleW)
 
+#Save and export to a csv file
 save(otherScaleW, file="otherScaleW.rda")
 write.csv(otherScaleW, "otherScaleW.csv")
 
 
-
-#Descriptive statistics of scale ratings (wide format data)
+## DESCRIPTIVE STATISTICS OF OTHER-TARGET SCALE RATINGS DATA (wide format data) ##
 
 library(psych)
 
@@ -1370,9 +1365,10 @@ describeBy(otherScaleW$scaleSamOv, otherScaleW$stereotype)
 describeBy(otherScaleW$scaleWaltOv, otherScaleW$stereotype)
 
 
+## T-TESTS OF OTHER-TARGET SCALE RATINGS ##
 
 #Run a repeated measures t-test to compare the mean rating of Sam (extraverted) 
-#to the mean rating of Walt (introverted) in the wide format data
+#to the mean rating of Walt (introverted), in the wide format data
 
 ttest <- t.test(otherScaleW$scaleSamOv, otherScaleW$scaleWaltOv, paired = T)  
 ttest
@@ -1383,15 +1379,12 @@ walt <- otherScaleW$scaleWaltOv
 cohensD(sam, walt, method = "paired")
 
 
-#Run an ANOVA to check for moderation of stereotype
+## ANOVA OF OTHER-TARGET SCALE RATINGS (long format data) ##
 
-library(ez)   #For the ANOVA
-library(lsr)  #For the effect sizes
+View(otherScale) 
 
-View(otherScale)    #use the long format data frame
-
-sapply(otherScale, class) 
-
+#Run the anova
+library(ez)   
 otherAOV <- ezANOVA(data = otherScale,    
                     dv = .(response), 
                     wid = .(subject), 
@@ -1400,17 +1393,10 @@ otherAOV <- ezANOVA(data = otherScale,
                     type = 3, 
                     detailed = TRUE,
                     return_aov = TRUE)
-
 otherAOV
 
-
-#Calculate partial eta squared effect sizes
-#Partial eta squared = SS effect/(SS effect + SS error)
-#eff = SS of effect
-#err = SS of error
-#function -> eta2p(eff,err)
-
-View(otherScale)
+#Calculate partial eta-squared effect sizes
+#function - eta2p(eff,err)
 
 #trialcode (Sam vs Walt)
 eta2p(685.3564,599.1446)
@@ -1421,84 +1407,14 @@ eta2p(1.8646,221.8021)
 #trialcode x stereotype
 eta2p(15.9990,599.1446)
 
+#*Note - see SPSS output for simple effects
 
-### See SPSS output for simple effects
 
+## PLOT OF OTHER-TARGET SCALE RATINGS ##
 
-### Create plot of scale ratings
-
-#Bar graph of the scale ratings
+library(ggplot2)
 ggplot(otherScale, aes(trialcode, response, fill = stereotype)) +
   stat_summary(fun.y = mean, geom = 'bar', position = 'dodge') +
   labs(x = 'Target', y = 'extraversion/introversion rating')
-
-
-#---------USEFUL FUNCTIONS------------------#
-
-##Package Functions
-
-install.packages("packageName") #Install package
-remove.packages("packageName")  #Uninstall package
-library(packageName)   #Open libraries
-library()   #Shows the installed packages
-
-
-##Directory Functions
-
-setwd("directory goes here")    #Set the directory to the location of the datafile
-getwd()   #Identify the current working directory. This function has no arguments.
-dir() # show files in the working directory
-
-
-##Reading and Saving files
-
-myData = read.csv("datafile.csv", header = TRUE)    #Read in the csv data file.
-myData <- read.csv(file.choose(), header = TRUE)    #Read in the csv data file.
-
-load("myData.RDA")    #Load R data
-search() # Shows the loaded packages
-
-save(fileName, file="filename.rda")   #Save the data as an R data file
-
-
-##Viewing Data
-
-View(myData)    #Open up data in a new tab
-head(myData)    #Show the first several lines of the data in the console  
-names(mydata)   # Lists variables in the dataset 
-
-
-##Identify data types
-
-sapply(pilotScale, class) #Lists the data type for every variable in the data frame.
-class(dataMatrix)         #Asks what data type "dataMatrix" is (data frame)
-class(dataMatrix$column)   #Asks what data type is "column" from dataMatrix (character, numeric, integer, logical, factor)
-is.numeric(dataMatrix$column)    # Asks whether the specified data is numeric
-is.character(dataMatrix$column)  # Asks whether the specified data is character
-
-pilotScale$trialType <- factor(pilotScale$trialType)    #Change data type to factor (to read as a nominal variable)
-pilotScale$response <- as.numeric(as.character(pilotScale$response))  #Change from factor to numeric
-
-
-##Manipulate data in data frame
-
-stcont3pilot$condition <- NULL   #Delete a column
-rm(stcont3pilot$condition)  #Delete a column, from dplyr
-
-
-##Help Functions
-
-?functionName   #To get help with a function or object
-help(functionName)   #To get help with a function or object
-??functionName    #Search the help pages for anything that has the word "functionName"
-help(package=car) # View documentation in package 'car'. You can also type: library(help="car")
-
-args(log) # Description of the command
-apropos("age") # Search the word "age" in the objects available in the current R session
-
-
-##Descriptive Statistics
-
-summary(myData)   #Some descriptive statistics   
 
 

@@ -3,6 +3,8 @@ DISSERTATION STUDIES
 
 Title: Expectancy Maintenance Shapes Context-Based Impression Formation
 
+Manuscript Authors: Lisa M. Huang & Jeffrey W. Sherman
+
 Abstract:
 People’s attempts to maintain consistency in their impressions of others often result in information processing that is biased toward expectancy maintenance. In this research, we examined one process by which people maintain expectancies of an individual when that individual is observed across multiple contexts – by generalizing an expectancy-congruent impression across contexts but contextualizing an expectancy-incongruent impression to the unique context in which expectancy-incongruent behaviors are observed. Across four experiments, we show that people engage in these expectancy maintenance processes when forming impressions of individuals and group members, and we show how these processes differentially affect impression strength across contexts. We also explored whether impressions can be changed. We discuss the implications of this research for stereotyping and attitude change.
 

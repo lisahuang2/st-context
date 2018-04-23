@@ -11,14 +11,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r include = FALSE}
-#Load the following data tables from the full analyses into the global environment:
-load(file = "demogW.rda")
+setwd("C:/Users/...")
+getwd()
 ```
 
-
 ```{r include = FALSE}
-setwd("C:/Users/Lisa/Documents/Lisa/Experiments/Stereotyping in context/ST&Context3/r markdown")
-getwd()
+#Load the following data tables from the full analyses into the global environment:
+load(file = "demogW.rda")
 ```
 
 

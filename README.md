@@ -1,6 +1,8 @@
 # st-context
 ST&amp;Context dissertation studies
 
-Files included in repository
+Data analysis scripts:
 
-- ST&cont3analysis.R
+- ST&cont3analysis.R (Experiment 3 in dissertation)
+- evalAT4analysis.R (Experiment 4a in dissertation)
+- evalAT5analysis.R (Experiment 4b in dissertation)

@@ -1074,13 +1074,18 @@ head(othOut_novel)
 save(othOut_novel, file = "othOut_novel.rda")  
 
 
-### OTHER TARGET, INGROUP ANALYSIS ##
 
+#####------------TEST PHASE ANALYSIS OF INGROUP TARGET--------------------------
 
-#--Ingroup Analysis, Main Comparisons--#
+### Chi-square goodness-of-fit test ###
 
-#Ingroup target, Consistent Context
-View(othIng_P1)
+#-----------------------------
+# Chisq.test(x,p = y)
+    # x = vector of observed values
+    # y = vector of expected proportions
+# cohenW(chisq, n)
+
+## INGROUP TARGET TEST, CONGRUENT CONTEXT ##
 
 OI_consCt <- table(othIng_P1$response3)   #Obtain counts of each response
 OI_consProp <- prop.table(table(othIng_P1$response3))   #Obtain proportions
@@ -1093,9 +1098,7 @@ chisq.test(OIcons, p=exp)
 sum(OIcons)       #To obtain n
 cohenW(230.77, 390)      #Obtain effect size
 
-
-#Ingroup target, Inconsistent Context
-View(othIng_P2)
+## INGROUP TARGET TEST, INCONGRUENT CONTEXT ##
 
 OI_incsCt <- table(othIng_P2$response3)   
 OI_incsProp <- prop.table(table(othIng_P2$response3)) 
@@ -1108,9 +1111,7 @@ chisq.test(OIincs, p=exp)
 sum(OIincs)     
 cohenW(6.9333, 390)           
 
-
-#Ingroup target, Shared Context
-View(othIng_shared)
+## INGROUP TARGET TEST, SHARED CONTEXT ##
 
 OI_shrCt <- table(othIng_shared$response3)   
 OI_shrProp <- prop.table(table(othIng_shared$response3)) 
@@ -1123,9 +1124,8 @@ chisq.test(OIshr, p=exp)
 sum(OIshr)     
 cohenW(99.082, 780)  
 
+## INGROUP TARGET TEST, MIXED CONTEXT ##
 
-#Ingroup target, Mixed Context
-View(othIng_mixed)
 OI_mixCt <- table(othIng_mixed$response3)   
 OI_mixProp <- prop.table(table(othIng_mixed$response3)) 
 rbind(OI_mixCt, OI_mixProp)    
@@ -1137,8 +1137,8 @@ chisq.test(OImix, p=exp)
 sum(OImix)     
 cohenW(73.846, 780)  
 
+## INGROUP TARGET TEST, NOVEL CONTEXT ##
 
-#Ingroup target, Novel Context
 View(othIng_novel)
 OI_novCt <- table(othIng_novel$response3)   
 OI_novProp <- prop.table(table(othIng_novel$response3)) 
@@ -1152,57 +1152,58 @@ sum(OInov)
 cohenW(144.74, 780) 
 
 
-#--Ingroup Analysis, Stereotype Moderation--#
+### MODERATION BY STEREOTYPE CONDITION ###
+### CHI-SQUARE TEST OF INDEPENDENCE ###
 
 library(gmodels)
 
+## INGROUP TARGET, CONGRUENT CONTEXT, MODERATION BY STEREOTYPE ##
 
-#Ingroup target, Consistent context
-View(othIng_P1)
 CrossTable(othIng_P1$stereotype, othIng_P1$response3, fisher = T, chisq = T, expected = T, 
            prop.c = F, prop.t = F, sresid = T, format = "SPSS")
 
 cohenW(6.325862, 390)
 
+## INGROUP TARGET, INCONGRUENT CONTEXT, MODERATION BY STEREOTYPE ##
 
-#Ingroup target, Inconsistent context
-View(othIng_P2)
 CrossTable(othIng_P2$stereotype, othIng_P2$response3, fisher = T, chisq = T, expected = T, 
            prop.c = F, prop.t = F, sresid = T, format = "SPSS")
 
 cohenW(4.214526, 390)
 
+## INGROUP TARGET, SHARED CONTEXT, MODERATION BY STEREOTYPE ##
 
-#Ingroup target, Shared context
-View(othIng_shared)
 CrossTable(othIng_shared$stereotype, othIng_shared$response3, fisher = T, chisq = T, expected = T, 
            prop.c = F, prop.t = F, sresid = T, format = "SPSS")
 
 cohenW(26.42864, 780)
 
+## INGROUP TARGET, MIXED CONTEXT, MODERATION BY STEREOTYPE ##
 
-#Ingroup target, Mixed context
-View(othIng_mixed)
 CrossTable(othIng_mixed$stereotype, othIng_mixed$response3, fisher = T, chisq = T, expected = T, 
            prop.c = F, prop.t = F, sresid = T, format = "SPSS")
 
 cohenW(0.85566, 780)
 
+## INGROUP TARGET, NOVEL CONTEXT, MODERATION BY STEREOTYPE ##
 
-#Ingroup target, novel context
-View(othIng_novel)
 CrossTable(othIng_novel$stereotype, othIng_novel$response3, fisher = T, chisq = T, expected = T, 
            prop.c = F, prop.t = F, sresid = T, format = "SPSS")
 
 cohenW(8.822366, 780)
 
 
+#####------------TEST PHASE ANALYSIS OF OUTGROUP TARGET--------------------------
 
-### OTHER TARGET, OUTGROUP ANALYSIS ##
+### Chi-square goodness-of-fit test ###
 
+#-----------------------------
+# Chisq.test(x,p = y)
+    # x = vector of observed values
+    # y = vector of expected proportions
+# cohenW(chisq, n)
 
-#Outgroup target, Consistent Context
-View(othOut_P1)
+## OUTGROUP TARGET TEST, CONGRUENT CONTEXT ##
 
 OO_consCt <- table(othOut_P1$response3) 
 OO_consProp <- prop.table(table(othOut_P1$response3)) 
@@ -1215,9 +1216,7 @@ chisq.test(OOcons, p=exp)
 sum(OOcons)       
 cohenW(2.9641, 390)    
 
-
-#Outroup target, Inconsistent Context
-View(othOut_P2)
+## OUTGROUP TARGET TEST, INCONGRUENT CONTEXT ##
 
 OO_incsCt <- table(othOut_P2$response3)   
 OO_incsProp <- prop.table(table(othOut_P2$response3)) 
@@ -1230,9 +1229,7 @@ chisq.test(OOincs, p=exp)
 sum(OOincs)     
 cohenW(252.81, 390)           
 
-
-#Outroup target, Shared Context
-View(othOut_shared)
+## OUTGROUP TARGET TEST, SHARED CONTEXT ##
 
 OO_shrCt <- table(othOut_shared$response3)   
 OO_shrProp <- prop.table(table(othOut_shared$response3)) 
@@ -1245,9 +1242,7 @@ chisq.test(OOshr, p=exp)
 sum(OOshr)     
 cohenW(201.05,780)  
 
-
-#Outroup target, Mixed Context
-View(othOut_mixed)
+## OUTGROUP TARGET TEST, MIXED CONTEXT ##
 
 OO_mixCt <- table(othOut_mixed$response3)   
 OO_mixProp <- prop.table(table(othOut_mixed$response3)) 
@@ -1260,9 +1255,7 @@ chisq.test(OOmix, p=exp)
 sum(OOmix)     
 cohenW(158.85, 780)  
 
-
-#Outroup target, Novel Context
-View(othOut_novel)
+## OUTGROUP TARGET TEST, NOVEL CONTEXT ##
 
 OO_novCt <- table(othOut_novel$response3)   
 OO_novProp <- prop.table(table(othOut_novel$response3)) 
@@ -1276,50 +1269,47 @@ sum(OOnov)
 cohenW(193.01, 780)  
 
 
-
-#--Outgroup Analysis, Stereotype Moderation--#
+### MODERATION BY STEREOTYPE CONDITION ###
+### CHI-SQUARE TEST OF INDEPENDENCE ###
 
 library(gmodels)
 
+## OUTGROUP TARGET, CONGRUENT CONTEXT, MODERATION BY STEREOTYPE ##
 
-#Outgroup target, Consistent context
 View(othOut_P1)
 CrossTable(othOut_P1$stereotype, othOut_P1$response3, fisher = T, chisq = T, expected = T, 
            prop.c = F, prop.t = F, sresid = T, format = "SPSS")
 
 cohenW(7.406084,390)
 
+## OUTGROUP TARGET, INCONGRUENT CONTEXT, MODERATION BY STEREOTYPE ##
 
-#Outgroup target, Inconsistent context
-View(othOut_P2)
 CrossTable(othOut_P2$stereotype, othOut_P2$response3, fisher = T, chisq = T, expected = T, 
            prop.c = F, prop.t = F, sresid = T, format = "SPSS")
 
 cohenW(0.9522378, 390)
 
+## OUTGROUP TARGET, SHARED CONTEXT, MODERATION BY STEREOTYPE ##
 
-#Outgroup target, Shared context
-View(othOut_shared)
 CrossTable(othOut_shared$stereotype, othOut_shared$response3, fisher = T, chisq = T, expected = T, 
            prop.c = F, prop.t = F, sresid = T, format = "SPSS")
 
 cohenW(0.01477604, 780)
 
+## OUTGROUP TARGET, MIXED CONTEXT, MODERATION BY STEREOTYPE ##
 
-#Outgroup target, Mixed context
-View(othOut_mixed)
 CrossTable(othOut_mixed$stereotype, othOut_mixed$response3, fisher = T, chisq = T, expected = T, 
            prop.c = F, prop.t = F, sresid = T, format = "SPSS")
 
 cohenW(15.06257, 780)
 
+## OUTGROUP TARGET, NOVEL CONTEXT, MODERATION BY STEREOTYPE ##
 
-#Outgroup target, novel context
-View(othOut_novel)
 CrossTable(othOut_novel$stereotype, othOut_novel$response3, fisher = T, chisq = T, expected = T, 
            prop.c = F, prop.t = F, sresid = T, format = "SPSS")
 
 cohenW(0.8661411, 780)
+
 
 
 

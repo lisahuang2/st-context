@@ -362,27 +362,35 @@ count(testMain, 'response3')
 #Save the file
 save(testMain, file="testMain.rda")
 
-#Separate the data by trial type
+
+## SEPARATE THE DATA BY TRIAL TYPE ##
+
+#Congruent context trials
 testCons <- subset(testMain, trialType == "P1")
 View(testCons)
 save(testCons, file="testCons.rda")
 
+#Incongruent context trials
 testIncs <- subset(testMain, trialType == "P2")
 View(testIncs)
 save(testIncs, file="testIncs.rda")
 
+#Shared context trials
 testShared <- subset(testMain, trialType == "shared")
 View(testShared)
 save(testShared, file="testShared.rda")
 
+#Mixed context trials
 testMixed <- subset(testMain, trialType == "mixed")
 View(testMixed)
 save(testMixed, file="testMixed.rda")
 
+#Novel context trials
 testNovel <- subset(testMain, trialType == "novel")
 View(testNovel)
 save(testNovel, file="testNovel.rda")
 
+#All context trials
 testAll <- subset(testMain, trialType == "all")
 View(testAll)
 save(testAll, file="testAll.rda")
@@ -405,11 +413,11 @@ cohenW = function(chisq, n) {
   w = (sqrt(chisq/n))
   return(w)
 }
-
 # cohenW(chisq, n)
 
 
-#Test Consistent Context
+## TEST CONGRUENT CONTEXT ##
+
 consCt <- table(testCons$response3)   #Obtain counts of each response before running the chi-square test
 consProp <- prop.table(table(testCons$response3))   #Obtain proportions
 rbind(consCt, consProp)
@@ -422,7 +430,8 @@ sum(cons)    #To obtain n.
 cohenW(345.88,510)         #Obtain effect size
 
 
-#Test Inconsistent Context
+## TEST INCONGRUENT CONTEXT ##
+
 incsCt <- table(testIncs$response3)
 incsProp <- prop.table(table(testIncs$response3)) 
 rbind(incsCt, incsProp)
@@ -435,7 +444,8 @@ sum(incs)
 cohenW(355.84,510)
 
 
-#Test Shared Context
+## TEST SHARED CONTEXT ##
+
 shrdCt <- table(testShared$response3)
 shrdProp <- prop.table(table(testShared$response3)) 
 rbind(shrdCt, shrdProp)
@@ -448,7 +458,8 @@ sum(shrd)
 cohenW(12.298,1020)
 
 
-#Test Mixed Context
+## TEST MIXED CONTEXT ##
+
 mixCt <- table(testMixed$response3)
 mixProp <- prop.table(table(testMixed$response3)) 
 rbind(mixCt, mixProp)
@@ -461,7 +472,8 @@ sum(mix)
 cohenW(.25098,1020)
 
 
-#Test Novel Context
+## TEST NOVEL CONTEXT ##
+
 novCt <- table(testNovel$response3)
 novProp <- prop.table(table(testNovel$response3)) 
 rbind(novCt, novProp)
@@ -474,7 +486,8 @@ sum(nov)
 cohenW(76.863,1020)
 
 
-#Test All Context
+## TEST ALL CONTEXT ##
+
 allCt <- table(testAll$response3)
 allProp <- prop.table(table(testAll$response3)) 
 rbind(allCt, allProp)
@@ -487,9 +500,8 @@ sum(all)
 cohenW(1.5686,1020)
 
 
-
-### Moderation of Stereotype
-### Chi-square test of independence
+### MODERATION BY STEREOTYPE CONDITION ###
+### CHI-SQUARE TEST OF INDEPENDENCE ###
 
 library(gmodels)
 

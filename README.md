@@ -23,8 +23,8 @@ Experiment 3:
 
 Experiment 4a:
 - evalAT4_analysis.R (Experiment 4a in dissertation)
-    - Not yet cleaned for readability
+    - (Not yet cleaned for clarity)
 
 Experiment 4b:
 - evalAT5_analysis.R (Experiment 4b in dissertation)
-    - Not yet cleaned for readability
+    - Not yet cleaned for clarity)

@@ -14,7 +14,7 @@ FILES
 Experiment 3:
 - ST&cont3_analysis.R 
     - Data analysis script
-    - Cleaned and condensed on 4/23/18 for readability
+    - Cleaned and condensed on 4/23/18 for clarity
 - ST&cont3_markdown.rmd 
     - R markdown document for reporting results
     - Provides the template for report but does not contain all results

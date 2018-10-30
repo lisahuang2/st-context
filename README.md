@@ -28,7 +28,7 @@ Experiment 3:
 - ST&cont3_analysis.R - data analysis script
 
 - ST&cont3_markdown.rmd - R markdown document for reporting results (provides the template for the report but does not contain all results)
-- ST&cont3_report.html - html report generated from ST&cont3_markdown.rmd
+- ST&cont3_report.html - html report generated from ST&cont3_markdown.rmd (To view the report, click on the file above, then copy and paste the url into the preview box at http://htmlpreview.github.io/)
 
 Experiment 4a:
 - evalAT4_analysis.R - data analysis script

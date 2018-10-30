@@ -3,12 +3,6 @@
 #------------------------------#
 
 
-#Set the directory to the location of the data file
-setwd("C:/Users/Lisa/Documents/Lisa/Experiments/Stereotyping in context/Eval-AT5/full analysis by congruency")
-getwd()
-
-
-
 #### Demographic data ####
 
 # Go through the demographics file from each computer and remove blank lines, lines 

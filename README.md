@@ -8,6 +8,11 @@ Manuscript Authors: Lisa M. Huang & Jeffrey W. Sherman
 Abstract:
 People’s attempts to maintain consistency in their impressions of others often result in information processing that is biased toward expectancy maintenance. In this research, we examined one process by which people maintain expectancies of an individual when that individual is observed across multiple contexts – by generalizing an expectancy-congruent impression across contexts but contextualizing an expectancy-incongruent impression to the unique context in which expectancy-incongruent behaviors are observed. Across four experiments, we show that people engage in these expectancy maintenance processes when forming impressions of individuals and group members, and we show how these processes differentially affect impression strength across contexts. We also explored whether impressions can be changed. We discuss the implications of this research for stereotyping and attitude change.
 
+Outline of Experiments:
+- Experiment 1 examined how trait expectations of an individual target person influence context-based impression formation and, specifically, whether they lead participants to form impressions in ways that support expectancy maintenance. 
+- Experiment 2 examined whether expectancies based on group stereotypes influence context-based impression formation in a similar manner as do individual target expectancies. 
+- Experiment 3, like Experiment 2, examined whether expectancies based on group stereotypes influence context-based impression formation. It also explored how impressions of an individual group member translate to impressions of another member of the same group and to a member of a different group when they are encountered in the same contexts. 
+- Experiment 4 examined whether participants would change their impressions if the frequency of an individual’s behaviors do not accurately reflect their initial expectations.
 
 FILES
 
